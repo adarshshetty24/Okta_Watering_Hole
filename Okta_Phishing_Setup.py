@@ -551,7 +551,7 @@ class S(BaseHTTPRequestHandler):
 
 
 class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
-        """Handle requests in a separate thread."""
+		"""Handle requests in a separate thread."""
 
 def get_okta_session(url, JSESSION_ID):
 	cookies = {'JSESSIONID': JSESSION_ID}
@@ -559,10 +559,12 @@ def get_okta_session(url, JSESSION_ID):
 	r = s.get(args[0] + url, headers=headers, cookies=cookies, allow_redirects=False)
 	return (s, r) 
 
+
 def okta_authenticate(username, password):
 	data = {'usrname': username, 'password': password, 'relayState': '/app/userHome#', 'options': {'multiOptionalFactorEnroll': 'false', 'warnBeforePasswordExpired': 'false'}}
 	response = requests.post('{}/api/v1/authn'.format(args[0]), headers=headers, json=data)		
 	return response
+
 
 def handle_mfa_verify(slug, data):
 	response = requests.post(args[0] + slug, headers=headers, json=data)
@@ -581,12 +583,12 @@ def sessions_management():
 		for rid in users:
 			user = users[rid]
 			for sesh in user.sessions:
-				#4 seconds + jitter
-				time.sleep(4 + random.randint(0,20))
+				# 4 seconds + jitter
+				time.sleep(4 + random.randint(0, 20))
 				sesh.get(args[0])
 		lock.release()
-		#5 minutes + jitter
-	    time.sleep((5 * 60) + random.randint(0,2 * 60))
+		# 5 minutes + jitter
+		time.sleep((5 * 60) + random.randint(0, 2 * 60))
 
 
 def result_server(handler_class=Results, port=4158):
@@ -604,8 +606,6 @@ def result_server(handler_class=Results, port=4158):
 			httpd.handle_request()
 	
 
-
-        
 def start_server(handler_class=S, port=4298):
 	server_address = ('', port)
 	httpd = ThreadedHTTPServer(server_address, handler_class)
